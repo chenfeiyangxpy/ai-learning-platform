@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人成长记录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        .nav { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 15px; }
+        .nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: 500; font-size: 16px; }
+        .nav a:hover { color: #667eea; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .add-section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .add-title { font-size: 20px; color: #333; margin-bottom: 20px; font-weight: 600; }
+        .add-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .submit-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .submit-btn:hover { opacity: 0.9; }
+        .records-section { margin-top: 30px; }
+        .section-title { font-size: 24px; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 2px; }
+        .year-section { margin-bottom: 40px; }
+        .year-header { font-size: 28px; color: #333; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #667eea; }
+        .week-card { background: white; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; }
+        .week-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.2s; }
+        .week-header:hover { opacity: 0.9; }
+        .week-title { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .week-toggle { font-size: 24px; transition: transform 0.3s; }
+        .week-card.expanded .week-toggle { transform: rotate(180deg); }
+        .week-content { display: none; padding: 20px 24px; }
+        .week-card.expanded .week-content { display: block; }
+        .week-summary { background: #f0f4f8; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .week-summary-title { font-size: 14px; color: #667eea; font-weight: 600; margin-bottom: 8px; }
+        .week-summary-content { color: #333; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+        .days-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .day-card { background: #fafafa; border-radius: 8px; padding: 12px; }
+        .day-title { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .day-content { font-size: 13px; color: #666; line-height: 1.5; white-space: pre-wrap; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; background: white; border-radius: 12px; }
+        .empty-icon { font-size: 64px; margin-bottom: 16px; }
+        .add-day-form { background: #f0f4f8; border-radius: 8px; padding: 16px; margin-top: 16px; }
+        .add-day-title { font-size: 14px; font-weight: 600; color: #667eea; margin-bottom: 12px; }
+        .add-day-grid { display: grid; grid-template-columns: 120px 1fr auto; gap: 12px; align-items: end; }
+        .add-day-input { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        .add-day-textarea { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: none; min-height: 60px; }
+        .add-day-btn { background: #667eea; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .monthly-section { margin-top: 30px; }
+        .monthly-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .month-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .month-title { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .month-content { color: #666; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+        .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; background: white; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📈 个人成长记录</h1>
+        <p>记录每一天的收获与进步 | 周总结 · 月总结 · 年度回顾</p>
+    </div>
+    <div class="nav">
+        <a href="/hub">🏠 个人中心</a>
+        <a href="/">🏠 杭州活动</a>
+        <a href="/job">💼 求职导航</a>
+        <a href="/study">📚 测开学习</a>
+        <a href="/tech_learning">🌳 技术学习树</a>
+        <a href="/ai_learning">🤖 AI学习</a>
+        <a href="/projects">📦 项目库</a>
+        <a href="/growth">📈 成长记录</a>
+    </div>
+    <div class="container">
+        <div class="add-section">
+            <div class="add-title">添加记录</div>
+            <form class="add-form" id="addForm">
+                <div class="form-group">
+                    <label>记录类型</label>
+                    <select name="type" id="recordType">
+                        <option value="daily">每日记录</option>
+                        <option value="weekly">周总结</option>
+                        <option value="monthly">月总结</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>年份</label>
+                    <input type="number" name="year" id="inputYear" value="2024" min="2020" max="2030">
+                </div>
+                <div class="form-group" id="weekGroup">
+                    <label>周次 (1-52)</label>
+                    <input type="number" name="week" id="inputWeek" value="1" min="1" max="52">
+                </div>
+                <div class="form-group" id="monthGroup" style="display: none;">
+                    <label>月份 (1-12)</label>
+                    <input type="number" name="month" id="inputMonth" value="1" min="1" max="12">
+                </div>
+                <div class="form-group" id="dayGroup">
+                    <label>日期 (1-7)</label>
+                    <select name="day" id="inputDay">
+                        <option value="1">周一</option>
+                        <option value="2">周二</option>
+                        <option value="3">周三</option>
+                        <option value="4">周四</option>
+                        <option value="5">周五</option>
+                        <option value="6">周六</option>
+                        <option value="7">周日</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label>内容</label>
+                    <textarea name="content" id="inputContent" placeholder="记录你的学习心得、项目进展、技能提升..."></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="submit-btn">保存记录</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="records-section">
+            <div class="section-title">成长历程</div>
+            <div id="recordsContainer">
+                {% if data.years %}
+                    {% for year, yearData in data.years.items() %}
+                    <div class="year-section">
+                        <div class="year-header">{{ year }}年</div>
+
+                        {% if yearData.weeks %}
+                        {% for weekNum, weekData in yearData.weeks.items() %}
+                        <div class="week-card" data-year="{{ year }}" data-week="{{ weekNum }}">
+                            <div class="week-header" onclick="toggleWeek(this)">
+                                <div class="week-title">
+                                    <span>📅</span> 第{{ weekNum }}周
+                                    {% if weekData.summary %}
+                                    <span style="font-size: 14px; opacity: 0.8; margin-left: 10px;">- 已总结</span>
+                                    {% endif %}
+                                </div>
+                                <div class="week-toggle">▼</div>
+                            </div>
+                            <div class="week-content">
+                                {% if weekData.summary %}
+                                <div class="week-summary">
+                                    <div class="week-summary-title">📝 周总结</div>
+                                    <div class="week-summary-content">{{ weekData.summary }}</div>
+                                </div>
+                                {% endif %}
+
+                                {% if weekData.days %}
+                                <div class="days-grid">
+                                    {% for dayNum, dayData in weekData.days.items() %}
+                                    <div class="day-card">
+                                        <div class="day-title">周{{ ['一','二','三','四','五','六','日'][dayNum|int - 1] }}</div>
+                                        <div class="day-content">{{ dayData.content }}</div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <div class="add-day-form">
+                                    <div class="add-day-title">添加内容</div>
+                                    <div class="add-day-grid">
+                                        <select class="add-day-input" id="addDayType{{ year }}{{ weekNum }}">
+                                            <option value="daily">每日</option>
+                                            <option value="weekly">周总结</option>
+                                        </select>
+                                        <textarea class="add-day-textarea" id="addDayContent{{ year }}{{ weekNum }}" placeholder="输入内容..."></textarea>
+                                        <button class="add-day-btn" onclick="addDayContent('{{ year }}', '{{ weekNum }}')">添加</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                        {% if yearData.months %}
+                        <div class="monthly-section">
+                            <h3 style="font-size: 20px; color: #333; margin-bottom: 16px;">月度回顾</h3>
+                            <div class="monthly-grid">
+                                {% for monthNum, monthData in yearData.months.items() %}
+                                <div class="month-card">
+                                    <div class="month-title">{{ monthNum }}月</div>
+                                    <div class="month-content">{{ monthData.summary }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">📈</div>
+                        <p>还没有任何成长记录</p>
+                        <p>开始记录你的每一天吧！</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2024 个人成长记录 | 记录成长，遇见更好的自己
+    </div>
+
+    <script>
+        // 处理记录类型变化
+        const recordType = document.getElementById('recordType');
+        const weekGroup = document.getElementById('weekGroup');
+        const monthGroup = document.getElementById('monthGroup');
+        const dayGroup = document.getElementById('dayGroup');
+
+        recordType.addEventListener('change', function() {
+            const type = this.value;
+            if (type === 'weekly') {
+                weekGroup.style.display = 'block';
+                monthGroup.style.display = 'none';
+                dayGroup.style.display = 'none';
+            } else if (type === 'monthly') {
+                weekGroup.style.display = 'none';
+                monthGroup.style.display = 'block';
+                dayGroup.style.display = 'none';
+            } else {
+                weekGroup.style.display = 'block';
+                monthGroup.style.display = 'none';
+                dayGroup.style.display = 'block';
+            }
+        });
+
+        // 添加记录
+        const addForm = document.getElementById('addForm');
+        addForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const type = document.getElementById('recordType').value;
+            const year = document.getElementById('inputYear').value;
+            const data = {
+                type: type,
+                year: year,
+                content: document.getElementById('inputContent').value
+            };
+
+            if (type === 'daily') {
+                data.week = document.getElementById('inputWeek').value;
+                data.day = document.getElementById('inputDay').value;
+            } else if (type === 'weekly') {
+                data.week = document.getElementById('inputWeek').value;
+            } else if (type === 'monthly') {
+                data.month = document.getElementById('inputMonth').value;
+            }
+
+            try {
+                const response = await fetch('/api/growth', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('保存成功！');
+                    location.reload();
+                } else {
+                    alert('保存失败');
+                }
+            } catch (error) {
+                alert('保存失败: ' + error.message);
+            }
+        });
+
+        // 折叠/展开周记录
+        function toggleWeek(header) {
+            const card = header.parentElement;
+            card.classList.toggle('expanded');
+        }
+
+        // 添加每日/周总结内容
+        async function addDayContent(year, week) {
+            const typeSelect = document.getElementById('addDayType' + year + week);
+            const contentTextarea = document.getElementById('addDayContent' + year + week);
+
+            const type = typeSelect.value;
+            const content = contentTextarea.value;
+
+            if (!content.trim()) {
+                alert('请输入内容');
+                return;
+            }
+
+            const data = {
+                type: type,
+                year: year,
+                week: week,
+                content: content
+            };
+
+            if (type === 'daily') {
+                data.day = '1'; // 默认周一，可以扩展选择
+            }
+
+            try {
+                const response = await fetch('/api/growth', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('保存成功！');
+                    location.reload();
+                } else {
+                    alert('保存失败');
+                }
+            } catch (error) {
+                alert('保存失败: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

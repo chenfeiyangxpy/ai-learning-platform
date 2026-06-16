@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测开学习</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        .nav { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 15px; }
+        .nav a { margin: 0 20px; text-decoration: none; color: #333; font-weight: 500; font-size: 16px; }
+        .nav a:hover { color: #4facfe; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .section-title { font-size: 22px; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 2px; }
+        .subsection-title { font-size: 18px; color: #333; margin-bottom: 16px; font-weight: 600; }
+        .subsection-title span { font-size: 14px; font-weight: normal; color: #666; margin-left: 10px; }
+        .exam-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .exam-table th, .exam-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        .exam-table th { background: #f8fafc; color: #333; font-weight: 600; }
+        .exam-table tr:hover { background: #f8fafc; }
+        .direction-card { background: #f8fafc; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+        .direction-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .direction-name { font-size: 16px; font-weight: 600; color: #333; }
+        .direction-importance { font-size: 12px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 4px 12px; border-radius: 20px; }
+        .direction-topics { list-style: none; padding-left: 0; }
+        .direction-topics li { color: #666; font-size: 14px; padding: 6px 0; padding-left: 20px; position: relative; }
+        .direction-topics li::before { content: '•'; color: #4facfe; position: absolute; left: 0; }
+        .channel-card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 16px; border: 1px solid #eee; transition: all 0.3s; }
+        .channel-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .channel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .channel-name { font-size: 18px; font-weight: 600; color: #333; }
+        .channel-link { color: #4facfe; text-decoration: none; font-size: 14px; }
+        .channel-desc { color: #666; font-size: 14px; margin-bottom: 12px; }
+        .channel-tips { list-style: none; padding-left: 0; }
+        .channel-tips li { color: #555; font-size: 14px; padding: 6px 0; padding-left: 20px; position: relative; }
+        .channel-tips li::before { content: '✓'; color: #28a745; position: absolute; left: 0; font-weight: bold; }
+        .priority-timeline { display: flex; gap: 20px; }
+        .priority-card { flex: 1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; color: white; }
+        .priority-card:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .priority-card:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .priority-day { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+        .priority-goal { font-size: 14px; opacity: 0.9; margin-bottom: 12px; }
+        .priority-items { list-style: none; padding-left: 0; }
+        .priority-items li { font-size: 13px; padding: 6px 0; padding-left: 20px; position: relative; }
+        .priority-items li::before { content: '•'; position: absolute; left: 0; }
+        .strategy-list { background: #f8fafc; border-radius: 8px; padding: 20px; }
+        .strategy-list li { color: #666; font-size: 14px; padding: 10px 0; padding-left: 24px; position: relative; list-style: none; }
+        .strategy-list li::before { content: '💡'; position: absolute; left: 0; }
+        .highlight { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 4px 8px; border-radius: 4px; }
+        .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; background: white; margin-top: 30px; }
+        .count-badge { background: #f5576c; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📚 测开学习</h1>
+        <p>海康测开笔试结构 + 必考内容方向 + 刷题渠道 + 复习优先级</p>
+    </div>
+    <div class="nav">
+        <a href="/hub">🏠 个人中心</a>
+        <a href="/">🏠 杭州活动</a>
+        <a href="/job">💼 求职导航</a>
+        <a href="/study">📚 测开学习</a>
+        <a href="/tech_learning">🌳 技术学习树</a>
+        <a href="/ai_learning">🤖 AI学习</a>
+        <a href="/projects">📦 项目库</a>
+        <a href="/growth">📈 成长记录</a>
+    </div>
+    <div class="container">
+        <div class="section">
+            <div class="section-title">📝 一、海康测开校招笔试题型</div>
+            <div class="subsection-title">{{ data.exam_structure.title }}<span>{{ data.exam_structure.structure }}</span></div>
+            <table class="exam-table">
+                <tr>
+                    <th>题型</th>
+                    <th>题量</th>
+                    <th>分值</th>
+                    <th>内容</th>
+                </tr>
+                {% for section in data.exam_structure.sections %}
+                <tr>
+                    <td>{{ section.name }}</td>
+                    <td>{{ section.count }}</td>
+                    <td>{{ section.score }}</td>
+                    <td>{{ section.content }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🎯 二、笔试内容方向</div>
+            {% for direction in data.content_directions %}
+            <div class="direction-card">
+                <div class="direction-header">
+                    <span class="direction-name">{{ direction.name }}</span>
+                    <span class="direction-importance">{{ direction.importance }}</span>
+                </div>
+                <ul class="direction-topics">
+                    {% for topic in direction.topics %}
+                    <li>{{ topic }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔗 三、刷题渠道</div>
+            {% for channel in data.practice_channels %}
+            <div class="channel-card">
+                <div class="channel-header">
+                    <span class="channel-name">{{ channel.name }}</span>
+                    <a href="{{ channel.url }}" target="_blank" class="channel-link">直达 →</a>
+                </div>
+                <div class="channel-desc">{{ channel.description }}</div>
+                <ul class="channel-tips">
+                    {% for tip in channel.tips %}
+                    <li>{{ tip }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="section">
+            <div class="section-title">⏰ 四、复习优先级</div>
+            <div class="priority-timeline">
+                {% for priority in data.review_priority %}
+                <div class="priority-card">
+                    <div class="priority-day">{{ priority.day }}</div>
+                    <div class="priority-goal">{{ priority.goal }}</div>
+                    <ul class="priority-items">
+                        {% for task in priority.tasks %}
+                        <li>{{ task }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">💡 五、答题策略</div>
+            <ul class="strategy-list">
+                {% for item in data.answer_strategy %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 12px;">🎁 额外资源</div>
+            <div style="font-size: 14px; opacity: 0.9; line-height: 1.8;">
+                如果需要，我可以为您提供：
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>一份<strong>海康测开笔试模拟卷（含答案）</strong></li>
+                    <li>或<strong>高频简答题模板（直接背）</strong></li>
+                </ul>
+                <div style="margin-top: 16px;">您需要哪一种？</div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2024 测开学习平台 | 祝所有考生笔试顺利！
+    </div>
+</body>
+</html>

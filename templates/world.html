@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界局势</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #45b7d1 0%, #2c3e50 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        .nav { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 15px; }
+        .nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: 500; font-size: 16px; }
+        .nav a:hover { color: #45b7d1; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .section-title { font-size: 22px; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(135deg, #45b7d1 0%, #2c3e50 100%); border-radius: 2px; }
+        .regions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .region-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 24px; }
+        .region-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #ddd; }
+        .region-icon { font-size: 36px; }
+        .region-name { font-size: 24px; font-weight: 600; color: #333; }
+        .topics-list { display: flex; flex-direction: column; gap: 16px; }
+        .topic-item { background: white; border-radius: 8px; padding: 16px; }
+        .topic-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px; }
+        .topic-summary { font-size: 14px; color: #666; line-height: 1.6; }
+        .military-section { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; border-radius: 12px; padding: 30px; }
+        .military-title { font-size: 24px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .updates-list { display: flex; flex-direction: column; gap: 16px; }
+        .update-item { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 16px; }
+        .update-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .update-summary { font-size: 14px; opacity: 0.9; }
+        .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+        .link-card { display: block; background: white; border: 2px solid #eee; border-radius: 12px; padding: 20px; text-align: center; text-decoration: none; transition: all 0.3s; }
+        .link-card:hover { border-color: #45b7d1; transform: translateY(-2px); }
+        .link-name { font-size: 16px; font-weight: 600; color: #333; }
+        .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; background: white; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌍 世界局势</h1>
+        <p>国际动态 | 军事资讯 | 中美关系</p>
+    </div>
+    <div class="nav">
+        <a href="/hub">🏠 个人中心</a>
+        <a href="/">🏠 杭州活动</a>
+        <a href="/job">💼 求职导航</a>
+        <a href="/study">📚 测开学习</a>
+        <a href="/projects">📦 项目库</a>
+        <a href="/growth">📈 成长记录</a>
+    </div>
+    <div class="container">
+        <div class="section">
+            <div class="section-title">{{ data.title }}</div>
+            <div class="regions-grid">
+                {% for region in data.regions %}
+                <div class="region-card">
+                    <div class="region-header">
+                        <span class="region-icon">{{ region.icon }}</span>
+                        <span class="region-name">{{ region.name }}</span>
+                    </div>
+                    <div class="topics-list">
+                        {% for topic in region.topics %}
+                        <div class="topic-item">
+                            <div class="topic-title">{{ topic.title }}</div>
+                            <div class="topic-summary">{{ topic.summary }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="military-section">
+            <div class="military-title">
+                <span>⚔️</span>
+                <span>{{ data.military.title }}</span>
+            </div>
+            <div class="updates-list">
+                {% for update in data.military.updates %}
+                <div class="update-item">
+                    <div class="update-title">{{ update.title }}</div>
+                    <div class="update-summary">{{ update.summary }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section" style="margin-top: 24px;">
+            <div class="section-title">📰 新闻资讯网站</div>
+            <div class="links-grid">
+                {% for link in data.links %}
+                <a href="{{ link.url }}" target="_blank" class="link-card">
+                    <div class="link-name">{{ link.name }}</div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2024 世界局势 | 关注国际动态
+    </div>
+</body>
+</html>

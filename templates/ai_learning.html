@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 核心知识点知识库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; }
+        .header { background: #1e293b; color: #fff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .logo { font-size: 20px; font-weight: 600; }
+        .nav-links a { color: #fff; text-decoration: none; margin-left: 16px; font-size: 14px; padding: 6px 12px; border-radius: 4px; transition: all 0.2s; }
+        .nav-links a:hover { background: rgba(255,255,255,0.1); }
+        .nav-links a.active { background: #2563eb; }
+        .theme-toggle { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 56px); }
+        .sidebar { background: #fff; border-right: 1px solid #e2e8f0; padding: 24px 0; position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; }
+        .sidebar-header { padding: 0 20px 16px; border-bottom: 1px solid #e2e8f0; margin-bottom: 16px; }
+        .sidebar-title { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .chapter-nav { padding: 0 12px; }
+        .chapter-item { margin-bottom: 4px; }
+        .chapter-link { display: flex; align-items: center; padding: 10px 12px; color: #475569; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 6px; transition: all 0.2s; cursor: pointer; }
+        .chapter-link:hover { background: #f1f5f9; color: #2563eb; }
+        .chapter-link.active { background: #eff6ff; color: #2563eb; font-weight: 600; }
+        .chapter-link .chapter-num { font-size: 11px; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; margin-right: 10px; min-width: 24px; text-align: center; }
+        .chapter-link.active .chapter-num { background: #2563eb; color: #fff; }
+        .sub-sections { margin-left: 34px; padding-left: 12px; border-left: 2px solid #e2e8f0; display: none; }
+        .sub-sections.show { display: block; }
+        .sub-link { display: block; padding: 6px 10px; color: #64748b; text-decoration: none; font-size: 13px; border-radius: 4px; transition: all 0.2s; }
+        .sub-link:hover { color: #2563eb; background: #f8fafc; }
+        .sub-link.active { color: #2563eb; background: #eff6ff; }
+        .main-content { padding: 24px 32px; background: #fff; }
+        .chapter-header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #e2e8f0; }
+        .chapter-badge { display: inline-block; background: #2563eb; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+        .chapter-header h1 { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+        .chapter-desc { color: #64748b; font-size: 15px; line-height: 1.6; }
+        .mindmap-bar { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .mindmap-label { color: #fff; font-weight: 600; font-size: 14px; margin-right: 8px; }
+        .mindmap-tag { background: rgba(255,255,255,0.15); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.2); }
+        .mindmap-tag:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+        .mindmap-tag.active { background: #fff; color: #2563eb; }
+        .section { margin-bottom: 32px; }
+        .section h2 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; }
+        .section h2 .section-num { background: #eff6ff; color: #2563eb; padding: 2px 8px; border-radius: 4px; font-size: 14px; }
+        .concept-box { background: #f8fafc; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; }
+        .concept-box h3 { font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 8px; }
+        .concept-box p { font-size: 14px; line-height: 1.7; color: #475569; }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+        .formula-box { background: #f1f5f9; border-radius: 8px; padding: 16px 20px; margin: 16px 0; font-family: 'Consolas', monospace; font-size: 14px; }
+        .formula-box .formula-title { color: #2563eb; font-weight: 600; margin-bottom: 8px; }
+        .code-block { background: #1e293b; border-radius: 10px; overflow: hidden; margin: 16px 0; }
+        .code-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: #0f172a; border-bottom: 1px solid #334155; }
+        .code-header span { color: #94a3b8; font-size: 12px; }
+        .code-header button { background: #334155; border: none; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .code-header button:hover { background: #475569; }
+        .code-body { padding: 16px; overflow-x: auto; }
+        .code-body pre { margin: 0; font-size: 13px; line-height: 1.6; color: #e2e8f0; font-family: 'Consolas', 'Monaco', monospace; }
+        .code-body .keyword { color: #f472b6; }
+        .code-body .string { color: #a3e635; }
+        .code-body .comment { color: #64748b; }
+        .code-body .function { color: #38bdf8; }
+        .code-body .number { color: #fbbf24; }
+        .exam-tip { background: #fef3c7; border-radius: 8px; padding: 14px 18px; margin: 16px 0; border-left: 4px solid #f59e0b; }
+        .exam-tip .tip-title { color: #b45309; font-weight: 600; font-size: 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .exam-tip .tip-content { color: #92400e; font-size: 13px; line-height: 1.6; }
+        .nav-footer { padding: 20px; border-top: 1px solid #e2e8f0; margin-top: auto; }
+        .search-box { position: relative; padding: 0 20px 16px; }
+        .search-box input { width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; }
+        .search-box input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .footer { text-align: center; padding: 24px; color: #64748b; font-size: 13px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } .main-content { padding: 16px; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <span class="logo">🤖</span>
+            <span class="logo">AI 核心知识点</span>
+        </div>
+        <div class="nav-links">
+            <a href="/hub">🏠 首页</a>
+            <a href="/tech_learning">💻 CS基础</a>
+            <a href="/ai_learning" class="active">🤖 AI学习</a>
+            <a href="/projects">📦 项目库</a>
+            <a href="/growth">📈 成长</a>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌙 深色</button>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">📚 章节导航</div>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="🔍 搜索知识点..." onkeyup="filterNav(this.value)">
+            </div>
+            <div class="chapter-nav" id="chapterNav"></div>
+            <div class="nav-footer">
+                <span style="font-size: 12px; color: #64748b;">📖 共 12 章 | 持续更新</span>
+            </div>
+        </div>
+
+        <div class="main-content" id="mainContent"></div>
+    </div>
+
+    <script>
+const chapters = [
+    { id: 1, title: "数学基础", desc: "线性代数、概率论、微积分核心知识点",
+      tags: ["全部", "线性代数", "概率论", "微积分"],
+      sections: [
+        { id: "1-1", title: "线性代数核心", concepts: [
+            {name: "向量", desc: "n维有序数组成，具有方向和大小，是神经网络数据表示的基础。"},
+            {name: "矩阵运算", desc: "包括加法、乘法、转置，是神经网络权重存储和计算的核心形式。"},
+            {name: "特征值分解", desc: "A = VΛV⁻¹，用于理解矩阵的主要变换方向，数据降维的基础。"},
+            {name: "SVD分解", desc: "A = UΣVᵀ，矩阵分解的通用形式，主成分分析(PCA)的数学基础。"}
+        ], formulas: ["矩阵乘法: (AB)ᵢⱼ = Σₖ Aᵢₖ · Bₖⱼ", "特征方程: det(A - λI) = 0", "SVD: A = UΣVᵀ (U,V正交, Σ对角)"],
+        code: `import numpy as np
+# 矩阵乘法
+A = np.array([[1,2],[3,4]])
+B = np.array([[5,6],[7,8]])
+C = A @ B  # [[19,22],[43,50]]
+
+# SVD分解
+U, S, Vt = np.linalg.svd(A)
+# S = [5.465, 0.366] 奇异值`,
+        tip: "面试常问：矩阵乘法维度匹配、特征值几何意义、SVD与PCA关系"},
+        { id: "1-2", title: "概率论核心", concepts: [
+            {name: "常见分布", desc: "正态分布(高斯)、伯努利、二项分布、泊松分布，ML中建模数据分布的基础。"},
+            {name: "期望与方差", desc: "E[X]衡量均值，Var[X]衡量离散程度，是评估随机变量的核心统计量。"},
+            {name: "贝叶斯定理", desc: "P(A|B) = P(B|A)P(A)/P(B)，机器学习中推理和更新的核心数学工具。"},
+            {name: "极大似然估计", desc: "找使观测数据出现概率最大的参数，是训练概率模型的核心方法。"}
+        ], formulas: ["贝叶斯: P(A|B) = P(B|A)·P(A)/P(B)", "正态分布: N(x;μ,σ²) = exp(-(x-μ)²/(2σ²))/√(2πσ²)", "MLE: θ* = argmax P(D|θ)"],
+        code: `from scipy import stats
+import numpy as np
+
+# 正态分布
+X = stats.norm(loc=0, scale=1)  # μ=0, σ=1
+p = X.pdf(0)  # 密度值 = 0.3989
+P = X.cdf(1.96)  # P(X≤1.96) ≈ 0.975
+
+# 极大似然估计
+data = np.array([2.1, 2.5, 2.8, 3.0])
+mu_mle = np.mean(data)  # μ_MLE = 2.6`,
+        tip: "面试常问：贝叶斯vs频率派、先验后验、高斯分布的性质"},
+        { id: "1-3", title: "微积分核心", concepts: [
+            {name: "导数与偏导", desc: "描述函数瞬时变化率，偏导处理多变量函数，是优化算法的基础数学工具。"},
+            {name: "梯度", desc: "∇f = (∂f/∂x₁, ∂f/∂x₂, ..., ∂f/∂xₙ)，函数上升最快的方向，梯度下降的数学基础。"},
+            {name: "链式法则", desc: "dy/dx = dy/du · du/dx，计算复合函数导数，反向传播算法的核心数学原理。"},
+            {name: "梯度下降直觉", desc: "沿梯度反方向迭代更新参数，是神经网络训练的核心优化方法。"}
+        ], formulas: ["链式法则: ∂L/∂x = ∂L/∂u · ∂u/∂x", "梯度下降: x_new = x - η∇f(x)", "学习率η控制步长，需权衡收敛速度与精度"],
+        code: `import autograd.numpy as np
+from autograd import grad
+
+# 定义损失函数
+def loss(w):
+    return (w - 3)**2 + 2*w
+
+# 自动求导
+grad_loss = grad(loss)
+w = 0.0
+for _ in range(50):
+    w = w - 0.1 * grad_loss(w)
+print(f"最优w: {w:.4f}")  # ≈ 1.0`,
+        tip: "面试常问：梯度消失/爆炸原因、链式法则在手算反向传播中的应用、学习率设置策略"}
+      ]},
+    { id: 2, title: "Python与数据工具链", desc: "NumPy、Pandas、Matplotlib核心用法",
+      tags: ["全部", "NumPy", "Pandas", "Matplotlib"],
+      sections: [
+        { id: "2-1", title: "NumPy核心", concepts: [
+            {name: "数组运算", desc: "向量化操作替代循环，广播机制自动扩展维度，深度学习数据处理基础。"},
+            {name: "维度变换", desc: "reshape(-1)自动推断、transpose转置、squeeze去除维度，神经网络张量操作基础。"},
+            {name: "广播机制", desc: "形状兼容的数组自动扩展计算，避免显式复制，高效内存利用。"}
+        ], formulas: ["广播规则: 从后向前对比维度，1可扩展为任意值", "形状检查: (m,n) @ (n,k) → (m,k)", "索引: arr[start:stop:step] 支持负索引"],
+        code: `import numpy as np
+
+# 数组创建与运算
+x = np.array([1,2,3,4,5])
+y = x ** 2  # [1,4,9,16,25] 向量化
+
+# 广播机制
+a = np.array([[1,2,3]])      # (1,3)
+b = np.array([10,20,30])     # (3,)
+c = a + b  # 广播后 (3,3)
+
+# 张量变换
+img = np.random.rand(28,28,3)  # HWC
+img_t = img.transpose(2,0,1)   # CHW`,
+        tip: "面试常问：深拷贝vs浅拷贝、广播失败情况、内存连续性"},
+        { id: "2-2", title: "Pandas核心", concepts: [
+            {name: "数据清洗", desc: "处理缺失值(dropna/fillna)、异常值检测、数据类型转换，数据预处理核心步骤。"},
+            {name: "分组统计", desc: "groupby聚合操作，SQL式数据聚合，是数据分析的核心工具。"},
+            {name: "索引操作", desc: "loc基于标签、iloc基于位置，索引是数据访问性能的关键。"}
+        ], formulas: ["缺失值: df.dropna() 删除 / df.fillna(0) 填充", "分组: df.groupby('col').agg({'val': 'mean'})", "合并: pd.merge/pd.concat 左右/上下拼接"],
+        code: `import pandas as pd
+
+# 数据读取与清洗
+df = pd.read_csv('data.csv')
+df['age'].fillna(df['age'].median(), inplace=True)
+
+# 分组聚合
+stats = df.groupby('city')['salary'].agg(
+    mean='mean', count='count'
+).reset_index()
+
+# 高效索引
+df.loc[df['salary'] > 10000, 'level'] = 'high'`,
+        tip: "面试常问：merge vs join区别、时间序列处理、数据类型选择"},
+        { id: "2-3", title: "Matplotlib核心", concepts: [
+            {name: "基础绘图", desc: "折线图、散点图、直方图，是模型训练可视化、结果展示的基础工具。"},
+            {name: "结果可视化", desc: "绘制loss曲线、accuracy曲线、特征重要性图，模型评估与调试的核心手段。"}
+        ], formulas: ["中文显示: plt.rcParams['font.sans-serif'] = ['SimHei']", "多子图: fig, axes = plt.subplots(2,2)", "保存: plt.savefig('fig.png', dpi=300)"],
+        code: `import matplotlib.pyplot as plt
+
+# 训练曲线可视化
+epochs = range(1, 51)
+train_loss = [np.random.uniform(2, 0.1) for _ in epochs]
+val_loss = [l + 0.2 for l in train_loss]
+
+plt.figure(figsize=(10, 6))
+plt.plot(epochs, train_loss, 'b-', label='Train')
+plt.plot(epochs, val_loss, 'r--', label='Val')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+plt.grid(True)
+plt.show()`,
+        tip: "面试常问：matplotlib vs seaborn vs plotly区别、动态图制作"}
+      ]},
+    { id: 3, title: "机器学习核心概念", desc: "数据集划分、损失函数、评估指标",
+      tags: ["全部", "基础框架", "损失优化", "评估指标"],
+      sections: [
+        { id: "3-1", title: "基础框架", concepts: [
+            {name: "数据集划分", desc: "训练集/验证集/测试集，常用比例7:1:2或8:2，防止过拟合的关键手段。"},
+            {name: "监督/无监督", desc: "监督有标签(Y)用于分类/回归，无监督无标签用于聚类/降维，是ML的两大范式。"},
+            {name: "过拟合/欠拟合", desc: "过拟合=训练好测试差(模型太复杂)，欠拟合=训练测试都差(模型太简单)。"}
+        ], formulas: ["训练误差: E_train = Σ loss(y_true, y_pred)", "泛化误差: 模型在新数据上的期望误差", "正则化: J' = J + λΩ(θ) 惩罚模型复杂度"],
+        code: `from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# 数据集划分
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# 标准化
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)`,
+        tip: "面试常问：K折交叉验证目的、验证集作用、early stopping原理"},
+        { id: "3-2", title: "损失与优化", concepts: [
+            {name: "常见损失函数", desc: "MSE回归、Cross-Entropy分类、Hinge(SVM)，损失是模型优化的目标。"},
+            {name: "梯度下降变种", desc: "SGD/BGD/MBGD/Adam，不同批量大小影响收敛速度和精度。"},
+            {name: "正则化", desc: "L1(稀疏)、L2(平滑)防止过拟合，dropout随机丢弃神经元。"}
+        ], formulas: ["MSE: L = (1/n)Σ(y-ŷ)²", "Cross-Entropy: L = -Σ y·log(ŷ)", "L2正则: Ω(θ) = ||θ||₂² = Σ θᵢ²"],
+        code: `import torch
+import torch.nn as nn
+
+# 常用损失函数
+criterion = nn.CrossEntropyLoss()   # 多分类
+criterion = nn.BCEWithLogitsLoss() # 二分类
+criterion = nn.MSELoss()           # 回归
+
+# 优化器选择
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)`,
+        tip: "面试常问：Adam vs SGD选择、梯度消失处理、学习率衰减策略"},
+        { id: "3-3", title: "评估指标", concepts: [
+            {name: "分类指标", desc: "Accuracy精确率/Recall召回率/F1-Score/PR曲线/AUC-ROC，综合评估分类器性能。"},
+            {name: "回归指标", desc: "MAE/MSE/RMSE/R²，评估连续值预测的精度和误差分布。"},
+            {name: "交叉验证", desc: "K-Fold轮换训练测试子集，充分评估模型泛化能力。"}
+        ], formulas: ["Precision = TP/(TP+FP) 查准率", "Recall = TP/(TP+FN) 查全率", "F1 = 2PR/(P+R)"],
+        code: `from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# 分类评估
+y_pred = model.predict(X_test)
+acc = accuracy_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred, average='macro')
+
+# K折交叉验证
+from sklearn.model_selection import cross_val_score
+scores = cross_val_score(model, X, y, cv=5, scoring='f1')`,
+        tip: "面试常问：类别不平衡处理、AUC含义、PR vs ROC选择"}
+      ]},
+    { id: 4, title: "经典机器学习算法", desc: "线性模型、树模型、SVM、聚类、降维",
+      tags: ["全部", "线性模型", "树模型", "聚类降维"],
+      sections: [
+        { id: "4-1", title: "线性回归/逻辑回归", concepts: [
+            {name: "线性回归", desc: "y = wx + b，监督学习回归基础，形式简单但可扩展（多项式、核方法）。"},
+            {name: "逻辑回归", desc: "sigmoid压缩输出到[0,1]，本质是线性分类器，用于二分类概率预测。"}
+        ], formulas: ["线性: ŷ = Xw + b", "逻辑: σ(z) = 1/(1+e⁻ᶻ)", "损失: L = -[y·log(ŷ) + (1-y)·log(1-ŷ)]"],
+        code: `from sklearn.linear_model import LinearRegression, LogisticRegression
+
+# 线性回归
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+predictions = lr.predict(X_test)
+
+# 逻辑回归
+clf = LogisticRegression(max_iter=1000)
+clf.fit(X_train, y_train)
+proba = clf.predict_proba(X_test)[:, 1]`,
+        tip: "面试常问：线性模型优缺点、过拟合处理、逻辑回归与SVM对比"},
+        { id: "4-2", title: "决策树与随机森林", concepts: [
+            {name: "决策树", desc: "递归分裂选择最优特征，信息增益/基尼系数为准则，可解释性强但易过拟合。"},
+            {name: "随机森林", desc: "Bagging+决策树，多棵树投票/平均，降低方差提高泛化能力。"}
+        ], formulas: ["信息熵: H(X) = -Σ pᵢlog(pᵢ)", "信息增益: IG = H(parent) - Σ wᵢH(child)", "基尼系数: Gini = 1 - Σ pᵢ²"],
+        code: `from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
+# 决策树
+dt = DecisionTreeClassifier(max_depth=10, min_samples_split=5)
+dt.fit(X_train, y_train)
+
+# 随机森林
+rf = RandomForestClassifier(n_estimators=100, max_depth=10, n_jobs=-1)
+rf.fit(X_train, y_train)
+importance = rf.feature_importances_`,
+        tip: "面试常问：特征选择准则、剪枝策略、随机森林vs梯度提升树"},
+        { id: "4-3", title: "SVM与KNN", concepts: [
+            {name: "SVM", desc: "最大化间隔分类器，核函数处理非线性，RBF核最常用，泛化能力强。"},
+            {name: "KNN", desc: "近邻投票分类，无需训练但推断慢，适合小数据集和规则简单的场景。"}
+        ], formulas: ["间隔: margin = 2/||w||", "对偶: max α Σαᵢ - ½ΣαᵢαⱼyᵢyⱼK(xᵢ,xⱼ)", "KNN预测: ŷ = argmax_c Σᵢ I(yᵢ=c)"],
+        code: `from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+
+# SVM (RBF核)
+svm = SVC(kernel='rbf', C=1.0, gamma='scale')
+svm.fit(X_train, y_train)
+
+# KNN
+knn = KNeighborsClassifier(n_neighbors=5, weights='distance')
+knn.fit(X_train, y_train)`,
+        tip: "面试常问：核函数选择、SVM vs 逻辑回归、KKT条件"},
+        { id: "4-4", title: "K-Means聚类", concepts: [
+            {name: "核心原理", desc: "迭代分配样本到最近质心、更新质心位置，直到收敛，是无监督聚类基础算法。"}
+        ], formulas: ["分配: c⁽ⁱ⁾ = argminⱼ ||x⁽ⁱ⁾ - μⱼ||²", "更新: μⱼ = (1/|Cⱼ|) Σᵢ∈Cⱼ x⁽ⁱ⁾", "目标: min Σⱼ Σᵢ∈Cⱼ ||x⁽ⁱ⁾ - μⱼ||²"],
+        code: `from sklearn.cluster import KMeans
+
+# K-Means聚类
+kmeans = KMeans(n_clusters=5, random_state=42, n_init=10)
+labels = kmeans.fit_predict(X)
+centers = kmeans.cluster_centers_
+
+# 肘部法则确定K
+inertias = []
+for k in range(2, 10):
+    km = KMeans(n_clusters=k, n_init=10)
+    km.fit(X)
+    inertias.append(km.inertia_)`,
+        tip: "面试常问：K选择方法、收敛条件、vs DBSCAN vs 层次聚类"},
+        { id: "4-5", title: "PCA降维", concepts: [
+            {name: "核心逻辑", desc: "投影到方差最大方向实现降维，保留主要信息，去除冗余维度，是数据预处理常用手段。"}
+        ], formulas: ["目标: max Var(PᵀX) = max tr(PᵀXXᵀP)", "求解: XXᵀ的特征向量", "降维: X_reduced = U[:,:k]ᵀ @ X"],
+        code: `from sklearn.decomposition import PCA
+
+# PCA降维
+pca = PCA(n_components=0.95)  # 保留95%方差
+X_pca = pca.fit_transform(X)
+print(f"降到{pca.n_components_}维")
+
+# 解释方差比
+print(pca.explained_variance_ratio_)`,
+        tip: "面试常问：PCA vs t-SNE vs LDA区别、特征值含义、维度灾难"}
+      ]},
+    { id: 5, title: "深度学习基础", desc: "神经网络、反向传播、优化器",
+      tags: ["全部", "神经网络", "激活函数", "优化器"],
+      sections: [
+        { id: "5-1", title: "神经网络基础", concepts: [
+            {name: "神经元", desc: "y = f(Wx + b)，加权求和+激活函数，是神经网络的基本计算单元。"},
+            {name: "前向传播", desc: "数据从输入层经隐藏层到输出层的计算过程，得到预测结果。"},
+            {name: "反向传播", desc: "链式法则求梯度，从后向前计算各参数梯度，是训练神经网络的核心算法。"}
+        ], formulas: ["神经元: y = f(Wx + b)", "损失: L = loss(y_pred, y_true)", "梯度: ∂L/∂W = ∂L/∂y · ∂y/∂W"],
+        code: `import torch
+import torch.nn as nn
+
+# 定义简单网络
+class Net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(784, 256)
+        self.fc2 = nn.Linear(256, 10)
+        
+    def forward(self, x):
+        x = self.fc1(x)
+        x = torch.relu(x)
+        return self.fc2(x)
+
+model = Net()
+optimizer = torch.optim.Adam(model.parameters())
+loss_fn = nn.CrossEntropyLoss()`,
+        tip: "面试常问：梯度消失/爆炸原因、反向传播细节、参数初始化方法"},
+        { id: "5-2", title: "激活函数", concepts: [
+            {name: "ReLU", desc: "max(0,x)，计算高效但存在 Dying ReLU 问题，深度网络首选。"},
+            {name: "Sigmoid", desc: "1/(1+e⁻ˣ)，输出[0,1]概率，但梯度饱和，隐藏层少用。"},
+            {name: "Softmax", desc: "归一化指数，多分类输出层使用，将 logits 转为概率分布。"}
+        ], formulas: ["ReLU: f(x) = max(0, x)", "Sigmoid: f(x) = 1/(1+e⁻ˣ)", "Softmax: f(xᵢ) = eˣⁱ/Σⱼeˣʲ"],
+        code: `# PyTorch激活函数
+x = torch.randn(10)
+
+relu = torch.relu(x)           # ReLU
+sigmoid = torch.sigmoid(x)    # Sigmoid
+softmax = torch.softmax(x, dim=0)  # Softmax
+
+# 多分类输出
+logits = model(x)
+probs = torch.softmax(logits, dim=1)`,
+        tip: "面试常问：ReLU优缺点、为什么不用Sigmoid隐藏层、Swish/GELU"},
+        { id: "5-3", title: "优化器", concepts: [
+            {name: "SGD", desc: "随机梯度下降，每次用一个样本更新，计算快但震荡收敛慢。"},
+            {name: "Adam", desc: "自适应学习率，结合动量和RMSProp，深度学习默认首选。"},
+            {name: "学习率调度", desc: "StepLR/ CosineAnnealing/ Warmup，控制学习率衰减策略。"}
+        ], formulas: ["SGD: θ = θ - η·∇L", "Adam: m = β₁m + (1-β₁)∇L; v = β₂v + (1-β₂)(∇L)²", "更新: θ = θ - η·m/(√v + ε)"],
+        code: `import torch.optim as optim
+
+# 常用优化器
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+optimizer = optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999))
+
+# 学习率调度
+scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
+
+# 训练循环
+for epoch in range(100):
+    loss = train_epoch()
+    scheduler.step()`,
+        tip: "面试常问：Adam vs SGD选择、学习率设置、梯度裁剪"}
+      ]},
+    { id: 6, title: "卷积神经网络(CV)", desc: "卷积层、池化层、经典架构",
+      tags: ["全部", "卷积层", "池化层", "经典架构"],
+      sections: [
+        { id: "6-1", title: "卷积层核心", concepts: [
+            {name: "感受野", desc: "输出特征图上像素对应的输入区域大小，逐层增大，决定特征提取范围。"},
+            {name: "步长(stride)", desc: "卷积核滑动步长，stride=2可减半尺寸，减少计算量和参数量。"},
+            {name: "填充(padding)", desc: "边缘补零，padding='same'保持尺寸，padding='valid'不填充。"}
+        ], formulas: ["输出尺寸: H_out = (H_in + 2P - K)/S + 1", "参数量: K_h × K_w × C_in × C_out + C_out", "常见: 3×3卷积最常用，计算效率高"],
+        code: `import torch.nn as nn
+
+# PyTorch卷积层
+conv = nn.Conv2d(
+    in_channels=3,      # 输入通道(RGB=3)
+    out_channels=64,    # 输出通道数
+    kernel_size=3,      # 3×3卷积核
+    stride=1,           # 步长
+    padding=1           # padding保持尺寸
+)
+x = torch.randn(1, 3, 224, 224)  # B,C,H,W
+out = conv(x)  # [1, 64, 224, 224]
+
+# 感受野计算(叠加3个3×3 ≈ 1个7×7)`,
+        tip: "面试常问：感受野计算、1×1卷积作用、深度可分离卷积"},
+        { id: "6-2", title: "池化层与全连接层", concepts: [
+            {name: "池化层", desc: "MaxPool/AvgPool下采样，减小尺寸、提高感受野、增强平移不变性。"},
+            {name: "全连接层", desc: "FC层所有神经元相连，分类器常用，高维flatten后接FC。"}
+        ], formulas: ["MaxPool: 取最大值，抗噪声", "AvgPool: 取平均，保留背景信息", "Dropout: p=0.5训练随机丢弃，防止过拟合"],
+        code: `# 池化层
+maxpool = nn.MaxPool2d(kernel_size=2, stride=2)
+avgpool = nn.AdaptiveAvgPool2d((1,1))  # 自适应输出
+
+# 全连接层
+fc = nn.Linear(512, 10)
+
+# 典型CV网络结构
+model = nn.Sequential(
+    conv, relu, maxpool,   # Conv block
+    conv, relu, maxpool,
+    avgpool,                # 全局池化
+    flatten,                # 展平
+    fc
+)`,
+        tip: "面试常问：池化层优缺点、Global Average Pooling、全连接层参数量"},
+        { id: "6-3", title: "经典结构", concepts: [
+            {name: "LeNet", desc: "1998年首个CNN，Conv-Pool-FC结构，手写数字识别启蒙架构。"},
+            {name: "ResNet核心思想", desc: "残差连接: y = F(x) + x，解决深层网络梯度消失/退化问题。"}
+        ], formulas: ["ResNet残差: y = F(x) + x", "恒等映射: 当F(x)=0时，y=x", "梯度: ∂L/∂x = ∂L/∂y · (1 + ∂F/∂x)"],
+        code: `# ResNet残差块
+class ResidualBlock(nn.Module):
+    def __init__(self, channels):
+        super().__init__()
+        self.conv1 = nn.Conv2d(channels, channels, 3, padding=1)
+        self.conv2 = nn.Conv2d(channels, channels, 3, padding=1)
+        self.relu = nn.ReLU()
+        
+    def forward(self, x):
+        residual = x
+        out = self.relu(self.conv1(x))
+        out = self.conv2(out)
+        return self.relu(out + residual)  # 残差连接`,
+        tip: "面试常问：ResNet为什么有效、残差连接梯度流、ResNeXt/VGG设计理念"},
+        { id: "6-4", title: "典型任务", concepts: [
+            {name: "图像分类", desc: "输入图像→CNN→特征→分类器→类别概率，ImageNet是基准数据集。"},
+            {name: "数据增强", desc: "RandomCrop/RandomFlip/ColorJitter/Rotation，增加训练数据多样性。"}
+        ], formulas: ["Top-1 Accuracy: 预测最大概率正确", "Top-5 Accuracy: 前5个概率有正确", "数据增强: 提升模型泛化能力"],
+        code: `from torchvision import transforms
+
+# 数据增强
+train_transform = transforms.Compose([
+    transforms.RandomResizedCrop(224),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.ColorJitter(brightness=0.2),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485], [0.229])
+])`,
+        tip: "面试常问：为什么数据增强有效、Test-Time Augmentation、Mixup/CutMix"}
+      ]},
+    { id: 7, title: "Transformer核心原理", desc: "自注意力机制、编码器解码器、位置编码",
+      tags: ["全部", "注意力机制", "位置编码", "残差LayerNorm"],
+      sections: [
+        { id: "7-1", title: "RNN/LSTM的局限", concepts: [
+            {name: "RNN问题", desc: "顺序计算无法并行，长序列梯度消失/爆炸，难以捕捉长距离依赖。"},
+            {name: "LSTM改进", desc: "门控机制缓解梯度消失，但仍有序列依赖，计算效率低。"}
+        ], formulas: ["RNN: h_t = tanh(W·[h_{t-1}, x_t] + b)", "LSTM门: i,f,o = sigmoid(W·[h_{t-1},x_t]+b)", "Transformer: O(n)并行，捕获任意距离依赖"],
+        code: `# RNN vs Transformer 并行性
+# RNN: 必须等待前一步计算完成
+# Transformer: 注意力矩阵可并行计算`,
+        tip: "面试常问：RNN为什么难训练、Transformer并行优势、LSTM vs GRU"},
+        { id: "7-2", title: "自注意力机制", concepts: [
+            {name: "核心思想", desc: "Query-Key-Value计算，Query查询相关性，生成加权上下文表示。"},
+            {name: "多头注意力", desc: "多个注意力头并行，捕捉不同子空间特征，增强表达能力。"}
+        ], formulas: ["Attention: Attn(Q,K,V) = softmax(QKᵀ/√d_k)V", "多头: MultiHead = Concat(head₁,...,headₕ)Wᴼ", "缩放因子: √d_k 防止点积过大导致梯度消失"],
+        code: `import torch.nn as nn
+import math
+
+class SelfAttention(nn.Module):
+    def __init__(self, d_model, n_heads):
+        super().__init__()
+        self.n_heads = n_heads
+        self.d_k = d_model // n_heads
+        self.W_q = nn.Linear(d_model, d_model)
+        self.W_k = nn.Linear(d_model, d_model)
+        self.W_v = nn.Linear(d_model, d_model)
+        self.W_o = nn.Linear(d_model, d_model)
+        
+    def forward(self, x):
+        B, T, C = x.shape
+        Q = self.W_q(x).view(B, T, self.n_heads, self.d_k).transpose(1,2)
+        K = self.W_k(x).view(B, T, self.n_heads, self.d_k).transpose(1,2)
+        V = self.W_v(x).view(B, T, self.n_heads, self.d_k).transpose(1,2)
+        
+        scores = torch.matmul(Q, K.transpose(-2,-1)) / math.sqrt(self.d_k)
+        attn = torch.softmax(scores, dim=-1)
+        out = torch.matmul(attn, V)
+        return self.W_o(out.transpose(1,2).contiguous().view(B, T, C))`,
+        tip: "面试常问：QKV理解、为什么除以√d_k、多头注意力的作用"},
+        { id: "7-3", title: "位置编码、残差、LayerNorm", concepts: [
+            {name: "位置编码", desc: "Transformer无时序信息，位置编码注入序列位置，正弦/学习式两种。"},
+            {name: "残差连接", desc: "主路径+残差路径相加，缓解深层训练困难，梯度直接回传。"},
+            {name: "LayerNorm", desc: "对每个样本做归一化，比BatchNorm更适合NLP任务。"}
+        ], formulas: ["PE(pos,2i) = sin(pos/10000^(2i/d))", "PE(pos,2i+1) = cos(pos/10000^(2i/d))", "LN: ŷ = γ·(x-μ)/√(σ²+ε) + β"],
+        code: `import torch
+import math
+
+# 位置编码
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_len=5000):
+        super().__init__()
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        self.register_buffer('pe', pe.unsqueeze(0))
+        
+    def forward(self, x):
+        return x + self.pe[:, :x.size(1)]
+
+# LayerNorm
+layer_norm = nn.LayerNorm(normalized_shape=[seq_len, d_model])`,
+        tip: "面试常问：位置编码选择、Pre-LN vs Post-LN、BatchNorm vs LayerNorm"}
+      ]},
+    { id: 8, title: "大模型基础认知", desc: "预训练微调、Tokenization、上下文窗口",
+      tags: ["全部", "预训练微调", "Tokenization", "幻觉问题"],
+      sections: [
+        { id: "8-1", title: "核心流程", concepts: [
+            {name: "预训练", desc: "大规模无监督语料学习语言知识，语言模型预测下一个token。"},
+            {name: "微调(SFT)", desc: "有监督微调，在特定任务数据上训练，使模型适应下游任务。"},
+            {name: "对齐(RLHF)", desc: "人类反馈强化学习，使模型输出符合人类偏好和价值观。"}
+        ], formulas: ["预训练: L = -Σ log P(xᵢ|x₁,...,xᵢ₋₁)", "SFT: L = -Σ y·log(π(y|x))", "RLHF: Reward Model + PPO优化"],
+        code: `# 预训练语言模型
+from transformers import AutoModel, AutoTokenizer
+model_name = "meta-llama/Llama-2-7b"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModel.from_pretrained(model_name)`,
+        tip: "面试常问：预训练 vs 微调区别、为什么需要RLHF、模型大小与能力关系"},
+        { id: "8-2", title: "Tokenization与词嵌入", concepts: [
+            {name: "分词器", desc: "将文本转为token序列，常见BPE/WordPiece/SentencePiece，中文按字/词切分。"},
+            {name: "词嵌入", desc: "token映射到稠密向量，Transformer输出也是隐状态向量。"}
+        ], formulas: ["BPE: 统计频次，逐步合并最高频pair", "中文词表: ~50000 tokens", "Embedding: x = W @ one_hot(token)"],
+        code: `# Tokenization示例
+from transformers import AutoTokenizer
+tokenizer = AutoTokenizer.from_pretrained("gpt2")
+
+text = "Hello, world!"
+tokens = tokenizer.encode(text, return_tensors='pt')
+# tokens: [15496, 11, 1917, 0]
+decoded = tokenizer.decode(tokens)  # 还原`,
+        tip: "面试常问：BPE原理、中英文分词差异、Token数量限制"},
+        { id: "8-3", title: "上下文窗口与幻觉", concepts: [
+            {name: "上下文窗口", desc: "模型一次能处理的最大token数，受限于位置编码和注意力计算。"},
+            {name: "生成原理", desc: "自回归生成，逐token预测直到EOS或达到最大长度。"},
+            {name: "幻觉问题", desc: "模型生成看似合理但事实错误的内容，是LLM的核心挑战。"}
+        ], formulas: ["生成: ŷₜ = argmax P(yₜ|y₁,...,yₜ₋₁,x)", "Temperature: 控制分布平滑度", "Top-k/p: 限制采样范围"],
+        code: `# LLM生成
+from transformers import pipeline
+generator = pipeline("text-generation", model="gpt2")
+
+output = generator(
+    "Once upon a time",
+    max_length=50,
+    temperature=0.7,    # 控制随机性
+    top_p=0.9,           # nucleus采样
+    num_return_sequences=1
+)`,
+        tip: "面试常问：上下文长度影响、幻觉检测方法、长上下文注意力衰减"}
+      ]},
+    { id: 9, title: "大模型应用开发", desc: "Prompt工程、RAG、Agent",
+      tags: ["全部", "Prompt工程", "RAG", "Agent"],
+      sections: [
+        { id: "9-1", title: "Prompt工程核心原则", concepts: [
+            {name: "结构化Prompt", desc: "System/User/Assistant角色分离，明确任务指令，提供示例(Few-shot)。"},
+            {name: "关键技巧", desc: "Chain-of-Thought引导推理、角色扮演指定身份、输出格式控制。"}
+        ], formulas: ["Zero-shot: 直接提问", "Few-shot: 提供1-3个示例", "CoT: Let me think step by step"],
+        code: `# 结构化Prompt
+prompt = """你是数据分析专家。
+任务：分析用户提供的数据，给出洞察建议。
+
+示例：
+输入：销售数据.xlsx
+输出：{销售额趋势、热门产品、改进建议}
+
+请分析：
+输入：{用户输入}"""
+
+response = model.generate(prompt)`,
+        tip: "面试常问：Prompt注入攻击、最佳Prompt长度、迭代优化方法"},
+        { id: "9-2", title: "RAG检索增强生成", concepts: [
+            {name: "核心流程", desc: "检索(Retriever)→增强(Context)→生成(Generator)，解决知识时效性问题。"},
+            {name: "向量数据库", desc: "Embedding存储+向量相似度检索，Milvus/Pinecone/Chroma是常见选择。"}
+        ], formulas: ["Embedding: vec = encoder(text)", "相似度: sim(a,b) = cos(a,b) = a·b/(|a||b|)", "RAG = retrieval + generation"],
+        code: `# RAG实现
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chains import RetrievalQA
+
+# 向量数据库
+vectorstore = Chroma.from_documents(documents=texts, 
+                                     embedding=OpenAIEmbeddings())
+
+# 检索增强问答
+qa = RetrievalQA.from_chain_type(
+    llm=model,
+    chain_type="stuff",
+    retriever=vectorstore.as_retriever()
+)
+result = qa.run("你的问题")`,
+        tip: "面试常问：RAG vs 微调选择、向量检索优化、Hybrid Search"},
+        { id: "9-3", title: "AI Agent基础", concepts: [
+            {name: "规划能力", desc: "将复杂任务分解为子任务，CoT/Tree-of-Thought引导规划能力。"},
+            {name: "工具调用", desc: "Agent调用外部工具(搜索/计算/代码执行)扩展能力边界。"},
+            {name: "记忆机制", desc: "短期记忆(上下文)+长期记忆(向量数据库)，支持多轮对话。"}
+        ], formulas: ["Agent = LLM + Planning + Tools + Memory", "ReAct: Thought + Action + Observation", "MRKL: 模块化推理和知识系统"],
+        code: `# Agent实现
+from langchain.agents import initialize_agent, Tool
+from langchain.tools import DuckDuckGoSearchRun
+
+search = DuckDuckGoSearchRun()
+tools = [Tool(name="Search", func=search.run, description="搜索最新信息")]
+
+agent = initialize_agent(
+    tools, llm, 
+    agent="zero-shot-react-description",
+    verbose=True
+)
+agent.run("2024年AI领域的最新进展是什么？")`,
+        tip: "面试常问：Agent vs Chatbot区别、工具调用安全、多Agent协作"}
+      ]},
+    { id: 10, title: "大模型工程化", desc: "LoRA微调、量化、部署",
+      tags: ["全部", "LoRA微调", "量化", "部署"],
+      sections: [
+        { id: "10-1", title: "LoRA核心原理", concepts: [
+            {name: "核心思想", desc: "冻结原模型权重，注入可训练低秩矩阵，大幅减少微调参数量。"},
+            {name: "适用场景", desc: "消费级GPU微调大模型，个人/小团队LLM定制化的主流方案。"}
+        ], formulas: ["W_new = W₀ + ΔW = W₀ + BA", "A ~ N(0,σ²), B = 0 初始化", "可训练参数量: 2 × r × d_model"],
+        code: `# LoRA实现
+from peft import LoraConfig, get_peft_model
+
+lora_config = LoraConfig(
+    r=8,                    # 秩，越大效果越好但显存更多
+    lora_alpha=16,          # 缩放因子
+    target_modules=["q_proj", "v_proj"],  # 应用层
+    lora_dropout=0.05,
+    task_type="CAUSAL_LM"
+)
+
+model = get_peft_model(base_model, lora_config)
+model.print_trainable_parameters()`,
+        tip: "面试常问：LoRA vs 全参数微调、秩的选择、QLoRA"},
+        { id: "10-2", title: "模型量化", concepts: [
+            {name: "4/8比特量化", desc: "FP32→INT8/INT4，大幅降低显存占用，推理加速但可能有精度损失。"},
+            {name: "量化方法", desc: "PTQ后训练量化(简单)、QAT量化感知训练(精度更好)。"}
+        ], formulas: ["量化: x_int = round(x_float / scale)", "反量化: x_float = x_int × scale", "GPTQ/AWQ/GGML 主流量化工具"],
+        code: `# INT8量化推理
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+
+quantization_config = BitsAndBytesConfig(
+    load_in_8bit=True,      # 8bit量化
+    llm_int8_threshold=6.0  # outlier阈值
+)
+model = AutoModelForCausalLM.from_pretrained(
+    model_name, 
+    quantization_config=quantization_config
+)`,
+        tip: "面试常问：量化精度损失、GPTQ vs AWQ、INT4 vs INT8选择"},
+        { id: "10-3", title: "部署基础", concepts: [
+            {name: "本地部署", desc: "Ollama/LM Studio/vLLM，本地运行开源LLM如LLaMA/Mistral。"},
+            {name: "API封装", desc: "FastAPI/Triton封装模型为REST API，支持流式输出。"}
+        ], formulas: ["vLLM: PagedAttention显存管理", "流式输出: Server-Sent Events(SSE)", "OpenAI-compatible API 通用接口"],
+        code: `# FastAPI封装LLM
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Request(BaseModel):
+    prompt: str
+    max_tokens: int = 512
+
+@app.post("/generate")
+async def generate(req: Request):
+    result = model.generate(req.prompt, req.max_tokens)
+    return {"result": result}`,
+        tip: "面试常问：vLLM vs Text Generation Inference、Batch推理优化"}
+      ]},
+    { id: 11, title: "热门赛道核心认知", desc: "多模态、具身智能、端侧AI",
+      tags: ["全部", "多模态", "具身智能", "端侧AI"],
+      sections: [
+        { id: "11-1", title: "多模态大模型", concepts: [
+            {name: "统一架构", desc: "视觉编码器+LLM对齐，多模态输入统一到语言空间。"},
+            {name: "跨模态对齐", desc: "CLIP对比学习对齐图文，BLIP系列图文预训练。"}
+        ], formulas: ["LLaVA: vision_encoder + LLM + projector", "图文对比: InfoNCE loss对齐", "多模态生成: Diffusion + LLM"],
+        code: `# 多模态推理
+from transformers import AutoProcessor, LlavaForConditionalGeneration
+from PIL import Image
+
+processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
+model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf")
+
+image = Image.open("demo.jpg")
+prompt = "Describe this image in detail."
+inputs = processor(text=prompt, images=image, return_tensors="pt")
+outputs = model.generate(**inputs)`,
+        tip: "面试常问：LLaVA vs MiniGPT-4区别、视觉Tokenizer"},
+        { id: "11-2", title: "具身智能", concepts: [
+            {name: "VLA模型", desc: "Vision-Language-Action统一模型，机器人操控的基础模型。"},
+            {name: "世界模型", desc: "预测环境演化的模型，RoboSim/Sora类物理模拟。"}
+        ], formulas: ["VLA = Vision + Language + Action", "Action = Policy(s, t) → a", "世界模型: s' = f(s, a)"],
+        code: `# 具身智能示例(机器人控制)
+# RT-2: Vision-Language-Action Model
+# 输入: 图像 + 文本指令
+# 输出: 机器人动作序列`,
+        tip: "面试常问：Sim2Real、动作空间离散化、灵巧手控制"},
+        { id: "11-3", title: "端侧AI", concepts: [
+            {name: "模型蒸馏", desc: "知识蒸馏大模型到小模型，DistilBERT/TinyBERT系列。"},
+            {name: "端侧推理框架", desc: "TensorRT Lite/ONNX Runtime Mobile/Core ML，高效端侧部署。"}
+        ], formulas: ["蒸馏: L = α·L_hard + (1-α)·L_soft", "L_soft = KL(p_teacher || p_student)", "延迟目标: <100ms实时推理"],
+        code: `# 模型压缩与端侧部署
+from transformers import AutoModelForSequenceClassification
+
+# 蒸馏小模型
+student = AutoModelForSequenceClassification.from_pretrained("distilbert-base-uncased")
+# 知识蒸馏训练...
+
+# 端侧转换
+import coremltools as ct
+model = ct.convert(student)
+model.save("student.mlpackage")`,
+        tip: "面试常问：MobileLLM进展、边缘设备限制、功耗优化"}
+      ]},
+    { id: 12, title: "面试核心考点汇总", desc: "算法高频题、工程面试题、项目复盘",
+      tags: ["全部", "算法题", "工程题", "项目话术"],
+      sections: [
+        { id: "12-1", title: "基础算法高频题", concepts: [
+            {name: "排序算法", desc: "快速排序/归并排序/堆排序，时间复杂度分析手写实现。"},
+            {name: "二分查找", desc: "模板化写法，边界条件处理，旋转数组等变体。"},
+            {name: "动态规划", desc: "DP五步曲：状态定义→转移方程→初始化→遍历顺序→优化。"}
+        ], formulas: ["快排: 平均O(nlogn)，最坏O(n²)", "二分: O(logn)搜索有序数组", "DP: 空间可用滚动数组优化"],
+        code: `# 高频DP模板
+def dp_template(nums):
+    n = len(nums)
+    dp = [0] * (n + 1)  # 状态定义
+    
+    # 初始化
+    dp[0] = base_case
+    
+    # 遍历求解
+    for i in range(1, n + 1):
+        dp[i] = transition(dp[i-1], ...)  # 转移方程
+    
+    return dp[n]`,
+        tip: "面试常问：时间空间复杂度分析、状态压缩技巧、背包问题变形"},
+        { id: "12-2", title: "大模型工程面试题", concepts: [
+            {name: "注意力机制手写", desc: "QKV计算、Mask机制、Multi-head实现细节。"},
+            {name: "分布式训练", desc: "DataParallel vs PipelineParallel、ZeRO优化器。"},
+            {name: "推理优化", desc: "KV Cache、Batching策略、Continuous Batching。"}
+        ], formulas: ["Attention: O(n²d) 序列长度平方复杂度", "KV Cache: 减少重复计算", "ZeRO-3: 分片optimizer states"],
+        code: `# 分布式训练示例
+from torch.nn.parallel import DataParallel
+model = DataParallel(model, device_ids=[0,1,2,3])
+# 或使用DeepSpeed/Torchrun
+# deepspeed train.py --num_gpus=4`,
+        tip: "面试常问：为什么用混合精度、梯度累积原理、推理吞吐优化"},
+        { id: "12-3", title: "项目复盘核心话术", concepts: [
+            {name: "项目介绍", desc: "STAR法则：背景(Situation)→任务(Task)→行动(Action)→结果(Result)。"},
+            {name: "技术难点", desc: "突出个人贡献，具体问题→分析→方案→效果量化。"},
+            {name: "数据处理", desc: "数据量级、清洗策略、特征工程、对最终效果的贡献。"}
+        ], formulas: ["量化: 准确率提升X%、推理加速Y倍", "模型对比: A vs B (精度/速度/资源)全面评估", "复盘: What+Why+How+Next"],
+        code: `# 项目描述模板
+"""
+项目: 基于LLM的智能客服系统
+背景: 传统FAQ机器人无法处理复杂多轮对话
+任务: 接入RAG+Agent提升问答准确率
+行动: 1)构建知识库 2)实现RAG流程 3)Agent工具调用
+结果: 对话准确率从65%提升到89%，用户满意度+23%
+""".strip()`,
+        tip: "面试常问：项目最大的挑战、失败经验、团队协作"}
+      ]}
+];
+
+function initNav() {
+    const nav = document.getElementById('chapterNav');
+    nav.innerHTML = chapters.map((ch, idx) => `
+        <div class="chapter-item">
+            <div class="chapter-link ${idx === 0 ? 'active' : ''}" onclick="showChapter(${idx})" data-chapter="${idx}">
+                <span class="chapter-num">${ch.id}</span>
+                ${ch.title}
+            </div>
+            <div class="sub-sections ${idx === 0 ? 'show' : ''}" data-chapter="${idx}">
+                ${ch.sections.map(sec => `
+                    <div class="sub-link" onclick="showSection(${idx}, '${sec.id}')" data-section="${sec.id}">
+                        ${sec.title}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+function showChapter(idx) {
+    document.querySelectorAll('.chapter-link').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sub-sections').forEach(el => el.classList.remove('show'));
+    document.querySelector(`.chapter-link[data-chapter="${idx}"]`).classList.add('active');
+    document.querySelector(`.sub-sections[data-chapter="${idx}"]`).classList.add('show');
+    renderChapter(idx);
+}
+
+function showSection(chIdx, secId) {
+    document.querySelectorAll('.chapter-link').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sub-link').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sub-sections').forEach(el => el.classList.remove('show'));
+    document.querySelector(`.chapter-link[data-chapter="${chIdx}"]`).classList.add('active');
+    document.querySelector(`.sub-link[data-section="${secId}"]`).classList.add('active');
+    document.querySelector(`.sub-sections[data-chapter="${chIdx}"]`).classList.add('show');
+    renderSection(chIdx, secId);
+}
+
+function renderChapter(idx) {
+    const ch = chapters[idx];
+    const html = `
+        <div class="chapter-header">
+            <span class="chapter-badge">第${ch.id}章</span>
+            <h1>${ch.title}</h1>
+            <p class="chapter-desc">${ch.desc}</p>
+        </div>
+        
+        <div class="mindmap-bar">
+            <span class="mindmap-label">🧠 本章思维导图：</span>
+            ${ch.tags.map(tag => `<span class="mindmap-tag ${tag === '全部' ? 'active' : ''}" onclick="filterTag(this)">${tag}</span>`).join('')}
+        </div>
+        
+        ${ch.sections.map(sec => renderSectionHTML(sec)).join('')}
+        
+        <div class="footer">
+            <p>AI 核心知识点知识库 | 基于公开资料整理 · 仅供学习参考</p>
+        </div>
+    `;
+    document.getElementById('mainContent').innerHTML = html;
+}
+
+function renderSection(chIdx, secId) {
+    const ch = chapters[chIdx];
+    const sec = ch.sections.find(s => s.id === secId);
+    const html = `
+        <div class="chapter-header">
+            <span class="chapter-badge">第${ch.id}章</span>
+            <h1>${ch.title}</h1>
+            <p class="chapter-desc">${ch.desc}</p>
+        </div>
+        ${renderSectionHTML(sec)}
+    `;
+    document.getElementById('mainContent').innerHTML = html;
+}
+
+function renderSectionHTML(sec) {
+    return `
+        <div class="section">
+            <h2><span class="section-num">${sec.id}</span>${sec.title}</h2>
+            
+            ${sec.concepts.map(c => `
+                <div class="concept-box">
+                    <h3>📌 ${c.name}</h3>
+                    <p>${c.desc}</p>
+                </div>
+            `).join('')}
+            
+            <div class="formula-box">
+                <div class="formula-title">📐 核心公式</div>
+                ${sec.formulas.map(f => `<div>• ${f}</div>`).join('')}
+            </div>
+            
+            ${sec.code ? `
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Python 代码示例</span>
+                        <button onclick="copyCode(this)">复制</button>
+                    </div>
+                    <div class="code-body">
+                        <pre>${sec.code}</pre>
+                    </div>
+                </div>
+            ` : ''}
+            
+            ${sec.tip ? `
+                <div class="exam-tip">
+                    <div class="tip-title">💡 面试高频考点</div>
+                    <div class="tip-content">${sec.tip}</div>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+function filterTag(el) {
+    document.querySelectorAll('.mindmap-tag').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function copyCode(btn) {
+    const code = btn.closest('.code-block').querySelector('pre').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '已复制!';
+        setTimeout(() => btn.textContent = '复制', 2000);
+    });
+}
+
+function filterNav(query) {
+    query = query.toLowerCase();
+    document.querySelectorAll('.chapter-link, .sub-link').forEach(el => {
+        el.style.display = el.textContent.toLowerCase().includes(query) ? '' : 'none';
+    });
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    const btn = document.querySelector('.theme-toggle');
+    btn.textContent = document.body.classList.contains('dark') ? '☀️ 浅色' : '🌙 深色';
+}
+
+initNav();
+renderChapter(0);
+    </script>
+</body>
+</html>

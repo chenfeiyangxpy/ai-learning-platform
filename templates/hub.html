@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人导航中心</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .header { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 48px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .header .subtitle { font-size: 20px; opacity: 0.9; }
+        .nav { background: rgba(255,255,255,0.95); padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: 500; font-size: 16px; }
+        .nav a:hover { color: #667eea; }
+        .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
+        .profile-section { background: white; border-radius: 20px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+        .profile-header { display: flex; align-items: center; gap: 30px; margin-bottom: 30px; }
+        .avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; color: white; }
+        .profile-info h2 { font-size: 32px; color: #333; margin-bottom: 10px; }
+        .profile-info .tags { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+        .tag { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 16px; border-radius: 20px; font-size: 14px; }
+        .profile-info .location { color: #666; font-size: 16px; }
+        .goals-section { background: #f8f9fa; border-radius: 12px; padding: 24px; margin-top: 20px; }
+        .goals-title { font-size: 20px; font-weight: 600; color: #333; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .goals-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+        .goal-item { background: white; padding: 16px; border-radius: 8px; color: #666; font-size: 15px; }
+        .interests-section { margin-top: 30px; }
+        .interests-title { font-size: 20px; font-weight: 600; color: #333; margin-bottom: 16px; }
+        .interest-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+        .interest-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 20px; }
+        .interest-card h4 { color: #667eea; font-size: 16px; margin-bottom: 8px; }
+        .interest-card p { color: #666; font-size: 14px; line-height: 1.6; }
+        .modules-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .module-card { background: white; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.15); transition: all 0.3s; cursor: pointer; }
+        .module-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .module-icon { font-size: 64px; margin-bottom: 20px; }
+        .module-title { font-size: 24px; font-weight: 600; color: #333; margin-bottom: 12px; }
+        .module-desc { color: #666; font-size: 14px; line-height: 1.6; }
+        .module-link { display: inline-block; margin-top: 16px; color: #667eea; text-decoration: none; font-weight: 600; }
+        .module-card:nth-child(1) { border-top: 4px solid #ff6b6b; }
+        .module-card:nth-child(2) { border-top: 4px solid #4ecdc4; }
+        .module-card:nth-child(3) { border-top: 4px solid #45b7d1; }
+        .module-card:nth-child(4) { border-top: 4px solid #96ceb4; }
+        .module-card:nth-child(5) { border-top: 4px solid #a8e6cf; }
+        .module-card:nth-child(6) { border-top: 4px solid #dda0dd; }
+        .module-card:nth-child(7) { border-top: 4px solid #ffb347; }
+        .footer { text-align: center; padding: 40px; color: rgba(255,255,255,0.8); font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 个人导航中心</h1>
+        <p class="subtitle">一个属于你的兴趣资讯聚合平台</p>
+    </div>
+    <div class="nav">
+        <a href="/hub">🏠 个人中心</a>
+        <a href="/">🏠 杭州活动</a>
+        <a href="/job">💼 求职导航</a>
+        <a href="/study">📚 测开学习</a>
+        <a href="/tech_learning">🌳 技术学习树</a>
+        <a href="/ai_learning">🤖 AI学习</a>
+        <a href="/projects">📦 项目库</a>
+        <a href="/growth">📈 成长记录</a>
+    </div>
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-header">
+                <div class="avatar">👨‍💻</div>
+                <div class="profile-info">
+                    <h2>{{ personal.profile.name }}</h2>
+                    <div class="tags">
+                        <span class="tag">{{ personal.profile.education }}</span>
+                        <span class="tag">{{ personal.profile.location }}</span>
+                        <span class="tag">{{ personal.profile.hometown }}</span>
+                    </div>
+                    <p class="location">{{ personal.profile.background }}</p>
+                </div>
+            </div>
+            <div class="goals-section">
+                <div class="goals-title">🎯 当前目标</div>
+                <div class="goals-list">
+                    {% for goal in personal.profile.goals %}
+                    <div class="goal-item">{{ goal }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="interests-section">
+                <div class="interests-title">💖 兴趣爱好</div>
+                <div class="interest-grid">
+                    <div class="interest-card">
+                        <h4>{{ personal.interests.sports.split('|')[0] }}</h4>
+                        <p>{{ personal.interests.sports }}</p>
+                    </div>
+                    <div class="interest-card">
+                        <h4>{{ personal.interests.tech.split('|')[0] }}</h4>
+                        <p>{{ personal.interests.tech }}</p>
+                    </div>
+                    <div class="interest-card">
+                        <h4>{{ personal.interests.world.split('|')[0] }}</h4>
+                        <p>{{ personal.interests.world }}</p>
+                    </div>
+                    <div class="interest-card">
+                        <h4>{{ personal.interests.entertainment.split('|')[0] }}</h4>
+                        <p>{{ personal.interests.entertainment }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modules-section">
+            <div class="module-card" onclick="location.href='/sports'">
+                <div class="module-icon">🏀</div>
+                <div class="module-title">体育资讯</div>
+                <div class="module-desc">NBA篮球、世界杯足球体育赛事资讯</div>
+                <div class="module-link">点击进入 →</div>
+            </div>
+            <div class="module-card" onclick="location.href='/tech'">
+                <div class="module-icon">🤖</div>
+                <div class="module-title">科技资讯</div>
+                <div class="module-desc">AI人工智能、科技新品发布会</div>
+                <div class="module-link">点击进入 →</div>
+            </div>
+            <div class="module-card" onclick="location.href='/world'">
+                <div class="module-icon">🌍</div>
+                <div class="module-title">世界局势</div>
+                <div class="module-desc">国际动态、军事资讯、中美关系</div>
+                <div class="module-link">点击进入 →</div>
+            </div>
+            <div class="module-card" onclick="location.href='/entertainment'">
+                <div class="module-icon">📚</div>
+                <div class="module-title">小说影视</div>
+                <div class="module-desc">玄幻小说、精彩剧情、角色图谱</div>
+                <div class="module-link">点击进入 →</div>
+            </div>
+            <div class="module-card" onclick="location.href='/job'">
+                <div class="module-icon">💼</div>
+                <div class="module-title">求职导航</div>
+                <div class="module-desc">大厂招聘信息、简历投递</div>
+                <div class="module-link">点击进入 →</div>
+            </div>
+            <div class="module-card" onclick="location.href='/study'">
+                <div class="module-icon">📝</div>
+                <div class="module-title">测开学习</div>
+                <div class="module-desc">笔试真题、刷题渠道、复习计划</div>
+                <div class="module-link">点击进入 →</div>
+            </div>
+            <div class="module-card" onclick="location.href='/projects'">
+                <div class="module-icon">📦</div>
+                <div class="module-title">项目库</div>
+                <div class="module-desc">个人项目作品管理</div>
+                <div class="module-link">点击进入 →</div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2024 个人导航中心 | 记录生活，沉淀成长
+    </div>
+</body>
+</html>

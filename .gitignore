@@ -1,0 +1,7 @@
+*.pyc
+__pycache__/
+uploads/
+news_data.json
+growth_data.json
+.DS_Store
+.env

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人项目库</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        .nav { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 15px; }
+        .nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: 500; font-size: 16px; }
+        .nav a:hover { color: #11998e; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .upload-section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .upload-title { font-size: 20px; color: #333; margin-bottom: 20px; font-weight: 600; }
+        .upload-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
+        .form-group input, .form-group textarea { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .file-input-wrapper { position: relative; }
+        .file-input-wrapper input[type="file"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+        .file-input-label { display: block; padding: 40px; border: 2px dashed #ddd; border-radius: 8px; text-align: center; color: #999; background: #fafafa; transition: all 0.3s; }
+        .file-input-wrapper:hover .file-input-label { border-color: #11998e; color: #11998e; }
+        .selected-file { margin-top: 10px; padding: 10px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px; }
+        .submit-btn { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-top: 16px; }
+        .submit-btn:hover { opacity: 0.9; }
+        .projects-section { margin-top: 30px; }
+        .section-title { font-size: 24px; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border-radius: 2px; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+        .project-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s; }
+        .project-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .project-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
+        .project-title { font-size: 18px; font-weight: 600; color: #333; }
+        .project-actions { display: flex; gap: 8px; }
+        .action-btn { padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; transition: opacity 0.2s; }
+        .action-btn.download { background: #11998e; color: white; }
+        .action-btn.delete { background: #ef5350; color: white; }
+        .action-btn:hover { opacity: 0.8; }
+        .project-description { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
+        .project-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+        .meta-tag { background: #e8f5e9; color: #11998e; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+        .meta-info { color: #999; font-size: 12px; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
+        .empty-icon { font-size: 64px; margin-bottom: 16px; }
+        .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; background: white; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 个人项目库</h1>
+        <p>上传和管理你的个人项目作品</p>
+    </div>
+    <div class="nav">
+        <a href="/hub">🏠 个人中心</a>
+        <a href="/">🏠 杭州活动</a>
+        <a href="/job">💼 求职导航</a>
+        <a href="/study">📚 测开学习</a>
+        <a href="/tech_learning">🌳 技术学习树</a>
+        <a href="/ai_learning">🤖 AI学习</a>
+        <a href="/projects">📦 项目库</a>
+        <a href="/growth">📈 成长记录</a>
+    </div>
+    <div class="container">
+        <div class="upload-section">
+            <div class="upload-title">上传新项目</div>
+            <form class="upload-form" id="uploadForm">
+                <div class="form-group">
+                    <label>项目名称</label>
+                    <input type="text" name="title" placeholder="例如：自动化测试框架" required>
+                </div>
+                <div class="form-group">
+                    <label>技术栈</label>
+                    <input type="text" name="tech_stack" placeholder="例如：Python + Selenium">
+                </div>
+                <div class="form-group full-width">
+                    <label>项目描述</label>
+                    <textarea name="description" placeholder="简要描述项目功能和技术实现..."></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label>项目文件</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" name="file" id="fileInput" accept=".zip,.rar,.7z,.tar,.gz,.pdf,.md">
+                        <div class="file-input-label" id="fileLabel">
+                            点击选择文件或拖拽文件到此处<br>
+                            <small>支持格式: zip, rar, 7z, tar, gz, pdf, md（最大100MB）</small>
+                        </div>
+                    </div>
+                    <div class="selected-file" id="selectedFile" style="display: none;"></div>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="submit-btn">上传项目</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="projects-section">
+            <div class="section-title">我的项目库</div>
+            <div class="projects-grid" id="projectsGrid">
+                {% if projects %}
+                    {% for project in projects %}
+                    <div class="project-card" data-id="{{ project.id }}">
+                        <div class="project-header">
+                            <div class="project-title">{{ project.title }}</div>
+                            <div class="project-actions">
+                                <a href="/api/projects/{{ project.id }}/download" class="action-btn download">下载</a>
+                                <button class="action-btn delete" onclick="deleteProject('{{ project.id }}')">删除</button>
+                            </div>
+                        </div>
+                        <div class="project-description">{{ project.description }}</div>
+                        <div class="project-meta">
+                            {% if project.tech_stack %}
+                            <span class="meta-tag">{{ project.tech_stack }}</span>
+                            {% endif %}
+                            <span class="meta-info">上传于 {{ project.upload_time }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-icon">📦</div>
+                        <p>还没有上传任何项目</p>
+                        <p>上传你的第一个项目吧！</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2024 个人项目库 | 项目文件仅本地存储
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileLabel = document.getElementById('fileLabel');
+        const selectedFile = document.getElementById('selectedFile');
+        const uploadForm = document.getElementById('uploadForm');
+
+        fileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                selectedFile.textContent = `已选择: ${file.name} (${formatSize(file.size)})`;
+                selectedFile.style.display = 'block';
+            }
+        });
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        uploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/api/projects', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('上传成功！');
+                    location.reload();
+                } else {
+                    alert('上传失败: ' + result.error);
+                }
+            } catch (error) {
+                alert('上传失败: ' + error.message);
+            }
+        });
+
+        async function deleteProject(id) {
+            if (!confirm('确定要删除这个项目吗？')) return;
+
+            try {
+                const response = await fetch(`/api/projects/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    document.querySelector(`.project-card[data-id="${id}"]`).remove();
+                    alert('删除成功！');
+                } else {
+                    alert('删除失败');
+                }
+            } catch (error) {
+                alert('删除失败: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

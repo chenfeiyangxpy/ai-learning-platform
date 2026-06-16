@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资讯管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .nav { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 15px; }
+        .nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: 500; font-size: 16px; }
+        .nav a:hover { color: #667eea; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .section-title { font-size: 22px; color: #333; margin-bottom: 20px; font-weight: 600; }
+        .info-box { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
+        .info-box h4 { color: #2e7d32; margin-bottom: 8px; }
+        .info-box p { color: #555; font-size: 14px; }
+        .add-form { display: grid; grid-template-columns: 200px 1fr 200px; gap: 16px; align-items: end; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
+        .form-group select, .form-group input, .form-group textarea { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
+        .submit-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .submit-btn:hover { opacity: 0.9; }
+        .news-list { margin-top: 30px; }
+        .news-category { margin-bottom: 30px; }
+        .category-title { font-size: 18px; color: #333; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #667eea; display: flex; justify-content: space-between; align-items: center; }
+        .news-items { display: flex; flex-direction: column; gap: 12px; }
+        .news-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f8f9fa; border-radius: 8px; transition: all 0.3s; }
+        .news-item:hover { background: #f0f0f0; }
+        .news-content { flex: 1; }
+        .news-title { font-size: 15px; color: #333; margin-bottom: 4px; }
+        .news-meta { font-size: 13px; color: #999; }
+        .news-actions { display: flex; gap: 8px; }
+        .action-btn { padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; transition: opacity 0.2s; }
+        .action-btn.delete { background: #ef5350; color: white; }
+        .action-btn.hot { background: #ff9800; color: white; }
+        .action-btn:hover { opacity: 0.8; }
+        .hot-tag { background: #ff5722; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 10px; }
+        .last-updated { text-align: right; color: #999; font-size: 14px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
+        .quick-add { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+        .quick-add-title { font-size: 18px; font-weight: 600; color: #e65100; margin-bottom: 16px; }
+        .quick-add-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: end; }
+        .quick-btn { background: #ff9800; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+        .quick-btn:hover { opacity: 0.9; }
+        .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; background: white; margin-top: 30px; }
+        .success-msg { background: #4caf50; color: white; padding: 12px; border-radius: 8px; margin-bottom: 16px; display: none; }
+        .error-msg { background: #f44336; color: white; padding: 12px; border-radius: 8px; margin-bottom: 16px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📰 资讯管理中心</h1>
+        <p>每日更新你的专属资讯 | 2026年6月12日</p>
+    </div>
+    <div class="nav">
+        <a href="/hub">🏠 个人中心</a>
+        <a href="/sports">🏀 体育资讯</a>
+        <a href="/tech">🤖 科技资讯</a>
+        <a href="/world">🌍 世界局势</a>
+        <a href="/news_admin">📰 资讯管理</a>
+    </div>
+    <div class="container">
+        <div class="info-box">
+            <h4>💡 资讯管理说明</h4>
+            <p>在这里你可以添加、删除每日资讯。所有资讯会自动保存到数据库，并在体育、科技、世界局势页面展示。</p>
+        </div>
+
+        <div class="success-msg" id="successMsg"></div>
+        <div class="error-msg" id="errorMsg"></div>
+
+        <div class="section">
+            <div class="section-title">➕ 添加新资讯</div>
+            <form class="add-form" id="addForm">
+                <div class="form-group">
+                    <label>选择分类</label>
+                    <select name="category" id="newsCategory">
+                        <option value="sports_nba">🏀 NBA篮球</option>
+                        <option value="sports_football">⚽ 世界杯足球</option>
+                        <option value="tech_ai">🤖 AI人工智能</option>
+                        <option value="tech_products">📱 科技新品</option>
+                        <option value="world_news">🌍 世界局势</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>资讯标题</label>
+                    <input type="text" name="title" id="newsTitle" placeholder="输入资讯标题..." required>
+                </div>
+                <div class="form-group">
+                    <label>来源</label>
+                    <input type="text" name="source" id="newsSource" placeholder="例如：虎扑、腾讯体育">
+                </div>
+                <button type="submit" class="submit-btn">添加资讯</button>
+            </form>
+        </div>
+
+        <div class="quick-add">
+            <div class="quick-add-title">⚡ 快速添加今日热点</div>
+            <div class="quick-add-form">
+                <div class="form-group">
+                    <label>NBA热点</label>
+                    <input type="text" id="quickNba" placeholder="例如：库里砍下30分...">
+                </div>
+                <button class="quick-btn" onclick="quickAdd('sports_nba', 'quickNba')">添加到NBA</button>
+            </div>
+            <div class="quick-add-form" style="margin-top: 12px;">
+                <div class="form-group">
+                    <label>世界杯热点</label>
+                    <input type="text" id="quickFootball" placeholder="例如：日本战胜德国...">
+                </div>
+                <button class="quick-btn" onclick="quickAdd('sports_football', 'quickFootball')">添加到世界杯</button>
+            </div>
+            <div class="quick-add-form" style="margin-top: 12px;">
+                <div class="form-group">
+                    <label>AI科技热点</label>
+                    <input type="text" id="quickAi" placeholder="例如：OpenAI发布新模型...">
+                </div>
+                <button class="quick-btn" onclick="quickAdd('tech_ai', 'quickAi')">添加到AI</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📋 当前资讯列表</div>
+            <div id="newsList"></div>
+            <div class="last-updated" id="lastUpdated"></div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2026 资讯管理中心 | 每天更新，保持资讯新鲜
+    </div>
+
+    <script>
+        const categoryNames = {
+            'sports_nba': '🏀 NBA篮球',
+            'sports_football': '⚽ 世界杯足球',
+            'tech_ai': '🤖 AI人工智能',
+            'tech_products': '📱 科技新品',
+            'world_news': '🌍 世界局势'
+        };
+
+        async function loadNews() {
+            try {
+                const response = await fetch('/api/news');
+                const result = await response.json();
+
+                const newsList = document.getElementById('newsList');
+                let html = '';
+
+                for (const [category, items] of Object.entries(result)) {
+                    if (category === 'last_updated' || !Array.isArray(items)) continue;
+
+                    html += `
+                        <div class="news-category">
+                            <div class="category-title">
+                                <span>${categoryNames[category] || category}</span>
+                                <span style="font-size: 14px; color: #999;">共 ${items.length} 条</span>
+                            </div>
+                            <div class="news-items">
+                    `;
+
+                    items.forEach((item, index) => {
+                        html += `
+                            <div class="news-item">
+                                <div class="news-content">
+                                    <div class="news-title">
+                                        ${item.hot ? '<span class="hot-tag">🔥 热点</span>' : ''}
+                                        ${item.title}
+                                    </div>
+                                    <div class="news-meta">来源: ${item.source} | 时间: ${item.time}</div>
+                                </div>
+                                <div class="news-actions">
+                                    <button class="action-btn hot" onclick="toggleHot('${category}', ${index}, ${!item.hot})">
+                                        ${item.hot ? '取消热点' : '设为热点'}
+                                    </button>
+                                    <button class="action-btn delete" onclick="deleteNews('${category}', ${index})">删除</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += '</div></div>';
+                }
+
+                newsList.innerHTML = html;
+                document.getElementById('lastUpdated').textContent = `最后更新: ${result.last_updated || '未知'}`;
+            } catch (error) {
+                showError('加载资讯失败: ' + error.message);
+            }
+        }
+
+        // 添加资讯
+        document.getElementById('addForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const category = document.getElementById('newsCategory').value;
+            const title = document.getElementById('newsTitle').value;
+            const source = document.getElementById('newsSource').value || '手动添加';
+
+            try {
+                const response = await fetch('/api/news', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({category, title, source})
+                });
+
+                if (response.ok) {
+                    showSuccess('添加成功！');
+                    document.getElementById('newsTitle').value = '';
+                    document.getElementById('newsSource').value = '';
+                    loadNews();
+                } else {
+                    const result = await response.json();
+                    showError(result.error || '添加失败');
+                }
+            } catch (error) {
+                showError('添加失败: ' + error.message);
+            }
+        });
+
+        // 快速添加
+        async function quickAdd(category, inputId) {
+            const input = document.getElementById(inputId);
+            const title = input.value.trim();
+
+            if (!title) {
+                showError('请输入资讯内容');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/news', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        category,
+                        title,
+                        source: '快速添加',
+                        hot: true
+                    })
+                });
+
+                if (response.ok) {
+                    showSuccess('添加成功！');
+                    input.value = '';
+                    loadNews();
+                } else {
+                    showError('添加失败');
+                }
+            } catch (error) {
+                showError('添加失败: ' + error.message);
+            }
+        }
+
+        // 删除资讯
+        async function deleteNews(category, index) {
+            if (!confirm('确定要删除这条资讯吗？')) return;
+
+            try {
+                const response = await fetch(`/api/news/${category}/${index}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showSuccess('删除成功！');
+                    loadNews();
+                } else {
+                    showError('删除失败');
+                }
+            } catch (error) {
+                showError('删除失败: ' + error.message);
+            }
+        }
+
+        // 切换热点
+        async function toggleHot(category, index, isHot) {
+            try {
+                const response = await fetch('/api/news');
+                const result = await response.json();
+
+                if (result[category] && result[category][index]) {
+                    result[category][index].hot = isHot;
+                    await fetch('/api/news/update', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({category, items: result[category]})
+                    });
+                    showSuccess(isHot ? '已设为热点' : '已取消热点');
+                    loadNews();
+                }
+            } catch (error) {
+                showError('操作失败: ' + error.message);
+            }
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('successMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
+        }
+
+        // 初始化加载
+        loadNews();
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科技资讯</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        .nav { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 15px; }
+        .nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: 500; font-size: 16px; }
+        .nav a:hover { color: #4ecdc4; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .section-title { font-size: 22px; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); border-radius: 2px; }
+        .ai-banner { background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 24px; }
+        .ai-banner h2 { font-size: 28px; margin-bottom: 10px; }
+        .news-list { display: flex; flex-direction: column; gap: 16px; }
+        .news-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f8f9fa; border-radius: 8px; transition: all 0.3s; }
+        .news-item:hover { background: #f0faf9; transform: translateX(5px); }
+        .news-title { font-size: 16px; color: #333; flex: 1; }
+        .news-meta { color: #999; font-size: 14px; white-space: nowrap; margin-left: 20px; }
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .category-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 24px; }
+        .category-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .category-icon { font-size: 32px; }
+        .category-name { font-size: 20px; font-weight: 600; color: #333; }
+        .events-list { display: flex; flex-direction: column; gap: 12px; }
+        .event-item { background: white; border-radius: 8px; padding: 12px; }
+        .event-title { font-size: 14px; color: #333; margin-bottom: 4px; }
+        .event-date { font-size: 12px; color: #999; }
+        .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+        .link-card { display: block; background: white; border: 2px solid #eee; border-radius: 12px; padding: 20px; text-align: center; text-decoration: none; transition: all 0.3s; }
+        .link-card:hover { border-color: #4ecdc4; transform: translateY(-2px); }
+        .link-name { font-size: 16px; font-weight: 600; color: #333; }
+        .tech-icons { display: flex; gap: 20px; justify-content: center; margin-top: 15px; }
+        .tech-icon { font-size: 36px; }
+        .footer { text-align: center; padding: 30px; color: #999; font-size: 14px; background: white; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖💻 科技资讯</h1>
+        <p>AI人工智能 | 科技新品 | 汽车资讯</p>
+    </div>
+    <div class="nav">
+        <a href="/hub">🏠 个人中心</a>
+        <a href="/">🏠 杭州活动</a>
+        <a href="/job">💼 求职导航</a>
+        <a href="/study">📚 测开学习</a>
+        <a href="/projects">📦 项目库</a>
+        <a href="/growth">📈 成长记录</a>
+    </div>
+    <div class="container">
+        <div class="ai-banner">
+            <h2>🤖 AI人工智能</h2>
+            <p>OpenAI · Google · Anthropic · 国产大模型</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔥 最新AI动态</div>
+            <div class="news-list">
+                {% for news in data.ai.latest %}
+                <div class="news-item">
+                    <div class="news-title">{{ news.title }}</div>
+                    <div class="news-meta">{{ news.source }} · {{ news.time }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">{{ data.tech_news.title }}</div>
+            <div class="categories-grid">
+                {% for category in data.tech_news.categories %}
+                <div class="category-card">
+                    <div class="category-header">
+                        <span class="category-icon">
+                            {% if category.name == 'Apple苹果' %}🍎
+                            {% elif category.name == '英伟达NVIDIA' %}🎮
+                            {% elif category.name == 'Tesla特斯拉' %}🚗
+                            {% elif category.name == '小米' %}📱
+                            {% endif %}
+                        </span>
+                        <span class="category-name">{{ category.name }}</span>
+                    </div>
+                    <div class="events-list">
+                        {% for event in category.events %}
+                        <div class="event-item">
+                            <div class="event-title">{{ event.title }}</div>
+                            <div class="event-date">{{ event.date }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔗 科技资讯网站</div>
+            <div class="links-grid">
+                {% for link in data.ai.links %}
+                <a href="{{ link.url }}" target="_blank" class="link-card">
+                    <div class="link-name">{{ link.name }}</div>
+                </a>
+                {% endfor %}
+                {% for link in data.tech_news.links %}
+                <a href="{{ link.url }}" target="_blank" class="link-card">
+                    <div class="link-name">{{ link.name }}</div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2024 科技资讯 | 探索科技前沿
+    </div>
+</body>
+</html>
